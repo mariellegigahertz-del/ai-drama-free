@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#100d18">
-    <meta name="description" content="Discover, save, and organize AI-made short dramas with clear reuse-license information.">
+    <meta name="description" content="Share and watch AI-made short dramas from a creator community.">
     <title>AI Drama Free</title>
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -17,6 +17,7 @@
           <span class="brand-mark" aria-hidden="true">AD</span>
           <span>AI DRAMA <b>FREE</b></span>
         </a>
+        <button class="account-button" id="account-button" type="button">Sign in</button>
         <button class="icon-button" id="install-button" type="button" hidden aria-label="Install app">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v4h14v-4"/></svg>
         </button>
@@ -25,8 +26,8 @@
       <main>
         <section class="intro">
           <p class="eyebrow">SHORT STORIES, BIG FEELINGS</p>
-          <h1>Your next <span>drama</span> starts here.</h1>
-          <p class="intro-copy">Find AI-made short dramas, keep your favorites, and check reuse terms before you download.</p>
+          <h1>Watch, share, and discover <span>drama.</span></h1>
+          <p class="intro-copy">A home for short AI dramas from creators everywhere. Sign in to upload your story and share it with the community.</p>
         </section>
 
         <section class="search-panel" aria-label="Find dramas">
@@ -44,9 +45,9 @@
           </div>
         </section>
 
-        <section class="catalog-notice" aria-label="Catalog information">
+        <section class="catalog-notice" id="catalog-notice" aria-label="Catalog information">
           <span class="notice-icon" aria-hidden="true">i</span>
-          <p><strong>Starter catalog:</strong> these are illustrative listings, not playable or downloadable videos. Add clips you have rights to use in <b>My Library</b>. Always check each license and attribution requirement.</p>
+          <p><strong>Demo mode:</strong> the sample stories are illustrative, not playable. Configure the managed backend to enable accounts, shared video uploads, and community viewing. Creators must only upload videos they have rights to share.</p>
         </section>
 
         <section class="section-heading">
@@ -54,10 +55,10 @@
             <p class="eyebrow" id="section-kicker">THE STORY SHELF</p>
             <h2 id="section-title">Discover dramas</h2>
           </div>
-          <button class="add-button" id="add-button" type="button"><span aria-hidden="true">+</span> Add a clip</button>
+          <button class="add-button" id="add-button" type="button"><span aria-hidden="true">+</span> Upload a drama</button>
         </section>
 
-        <div class="result-meta"><span id="result-count"></span>        <span class="license-key"><i></i> License info shown</span></div>
+        <div class="result-meta"><span id="result-count"></span><span class="license-key"><i></i> Creator-supplied rights info</span></div>
         <section class="video-grid" id="video-grid" aria-live="polite"></section>
       </main>
 
@@ -84,35 +85,77 @@
 
     <dialog id="add-dialog" class="app-dialog add-dialog">
       <button class="dialog-close" type="button" data-close aria-label="Close">×</button>
-      <p class="eyebrow">YOUR COLLECTION</p>
-      <h2>Add a short drama</h2>
-      <p class="dialog-copy">Add a direct video link and its license. Your clips and saved list stay on this device.</p>
+      <p class="eyebrow">SHARE WITH THE COMMUNITY</p>
+      <h2>Upload a short drama</h2>
+      <p class="dialog-copy">Your video will be visible to everyone. Upload size is limited to 50 MB. Only share videos you created or have permission to publish.</p>
       <form id="add-form">
         <label>Story title<input name="title" maxlength="80" required placeholder="e.g. The Last Train Home"></label>
-        <label>Direct video URL<input name="videoUrl" type="url" required placeholder="https://example.com/clip.mp4"></label>
-        <label>License or permissions URL<input name="licenseUrl" type="url" required placeholder="https://..."></label>
-        <label>License type
-          <select name="licenseType" required>
-            <option value="">Choose a license</option>
-            <option>CC0 / Public Domain</option>
-            <option>CC BY (attribution required)</option>
-            <option>CC BY-SA (attribution and share alike)</option>
-            <option>Other permission</option>
-          </select>
-        </label>
+        <label>About this story<textarea name="description" maxlength="500" required placeholder="Give viewers a short, spoiler-free introduction."></textarea></label>
+        <label>Video file<input name="video" type="file" accept="video/mp4,video/webm,video/quicktime" required></label>
         <label>Genre
-          <select name="genre">
-            <option>Romance</option><option>Mystery</option><option>Sci-Fi</option><option>Fantasy</option><option>Drama</option>
+          <select name="genre" required>
+            <option>Romance</option><option>Mystery</option><option>Sci-Fi</option><option>Fantasy</option><option>Drama</option><option>Thriller</option><option>Comedy</option>
           </select>
         </label>
-        <label>Creator / source<input name="creator" maxlength="80" required placeholder="Creator name or source"></label>
-        <label class="check-label"><input name="rightsConfirmed" type="checkbox" required> I checked the linked terms and have permission to download and reuse this video.</label>
-        <p class="form-warning">This app does not verify licenses. You are responsible for checking the terms, attribution, and any restrictions before reuse.</p>
-        <button class="primary-button" type="submit">Add to my library</button>
+        <label>Creator name<input name="creator" maxlength="60" required placeholder="Name shown with your story"></label>
+        <label>Sharing rights
+          <select name="licenseType" required>
+            <option value="">Choose how others may use this video</option>
+            <option value="All rights reserved — view only">All rights reserved — view only</option>
+            <option value="CC BY (attribution required)">CC BY (attribution required)</option>
+            <option value="CC BY-SA (attribution and share alike)">CC BY-SA (attribution and share alike)</option>
+            <option value="CC0 / Public Domain">CC0 / Public Domain</option>
+          </select>
+        </label>
+        <label>License terms link (required for Creative Commons)<input name="licenseUrl" type="url" placeholder="https://..."></label>
+        <label class="check-label"><input name="rightsConfirmed" type="checkbox" required> I created this video or have permission to upload and share it.</label>
+        <label class="check-label"><input name="aiConfirmed" type="checkbox" required> This is an AI-made or AI-assisted short drama.</label>
+        <p class="form-warning">Uploads are public. The app does not verify ownership or licenses. Users can report videos; reports are reviewed in the backend dashboard.</p>
+        <button class="primary-button" type="submit">Upload and publish</button>
+      </form>
+    </dialog>
+
+    <dialog id="account-dialog" class="app-dialog">
+      <button class="dialog-close" type="button" data-close aria-label="Close">×</button>
+      <p class="eyebrow">CREATOR COMMUNITY</p>
+      <h2 id="account-title">Sign in</h2>
+      <p class="dialog-copy">Use your email and a password to save your account and publish videos.</p>
+      <form id="account-form" class="account-form">
+        <label>Email<input name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+        <label>Password<input name="password" type="password" autocomplete="current-password" minlength="8" required placeholder="At least 8 characters"></label>
+        <button class="primary-button" id="account-submit" type="submit">Sign in</button>
+      </form>
+      <button class="text-button" id="account-mode-button" type="button">New here? Create an account</button>
+      <p class="form-warning">Email confirmation may be required. Use a password you do not use on other sites.</p>
+    </dialog>
+
+    <dialog id="watch-dialog" class="app-dialog watch-dialog">
+      <button class="dialog-close" type="button" data-close aria-label="Close">×</button>
+      <div id="watch-content"></div>
+    </dialog>
+
+    <dialog id="report-dialog" class="app-dialog">
+      <button class="dialog-close" type="button" data-close aria-label="Close">×</button>
+      <p class="eyebrow">COMMUNITY SAFETY</p>
+      <h2>Report this video</h2>
+      <form id="report-form" class="account-form">
+        <input type="hidden" name="videoId">
+        <label>Why are you reporting it?
+          <select name="reason" required>
+            <option value="">Choose a reason</option>
+            <option>Copyright or permission concern</option>
+            <option>Harmful or illegal content</option>
+            <option>Misleading or not an AI drama</option>
+            <option>Spam or other issue</option>
+          </select>
+        </label>
+        <button class="primary-button" type="submit">Send report</button>
       </form>
     </dialog>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
     <script src="app.js" defer></script>
   </body>
 </html>

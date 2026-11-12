@@ -1,7 +1,7 @@
 {
   "name": "AI Drama Free",
   "short_name": "AI Drama",
-  "description": "Discover, save, and organize AI-made short dramas with clear reuse-license information.",
+  "description": "Share and watch AI-made short dramas from a creator community.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
